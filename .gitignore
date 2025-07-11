@@ -1,0 +1,53 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+dist/
+build/
+.env
+.env.*
+
+# Playwright/test output
+test-results/
+playwright-report/
+*.log
+
+# Relatórios e logs gerados
+logs/
+reports/
+
+# VSCode
+.vscode/
+.history/
+.settings/
+
+# Mac/Windows lixo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python virtual env (caso use scripts python)
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Arquivos temporários do sistema
+*.swp
+*.swo
+~$*
+tmp/
+temp/
+
+# Outros
+coverage/
+*.tgz
+
+# Pasta de screenshots/prints gerados
+docs/imagens/*.png
+docs/imagens/*.jpg
+docs/imagens/*.jpeg
+
+# Arquivos pessoais
+*.local
+*.bak

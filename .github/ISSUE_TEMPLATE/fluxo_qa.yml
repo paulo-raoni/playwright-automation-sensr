@@ -1,0 +1,38 @@
+name: Novo Fluxo QA
+description: Template para gravação e submissão de um novo fluxo automatizado
+title: '[QA][Fluxo] {Nome do Fluxo}'
+labels: ['qa', 'novo fluxo']
+body:
+  - type: input
+    id: nome_fluxo
+    attributes:
+      label: Nome do Fluxo
+      description: Exemplo: Login Básico, Criação de Ticket
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: O que este fluxo testa/valida?
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos Executados
+      description: Liste os passos realizados (1, 2, 3…)
+    validations:
+      required: true
+  - type: input
+    id: script
+    attributes:
+      label: Script Gerado
+      description: Caminho do arquivo `.spec.ts` enviado ou link para o branch
+    validations:
+      required: true
+  - type: textarea
+    id: observacoes
+    attributes:
+      label: Observações
+      description: Erros, dúvidas, pontos de atenção

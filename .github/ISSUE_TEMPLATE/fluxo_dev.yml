@@ -1,0 +1,29 @@
+name: Ajuste/Automação Fluxo Dev
+description: Template para revisão, ajuste ou refino de script de fluxo E2E
+title: '[DEV][Automação] {Nome do Fluxo}'
+labels: ['dev', 'automação']
+body:
+  - type: input
+    id: nome_fluxo
+    attributes:
+      label: Nome do Fluxo
+      description: Mesmo nome do fluxo QA ou nova feature
+    validations:
+      required: true
+  - type: textarea
+    id: alteracoes
+    attributes:
+      label: O que foi ajustado?
+      description: Explique as principais mudanças/refino
+    validations:
+      required: true
+  - type: textarea
+    id: assertivas
+    attributes:
+      label: Assertivas adicionadas/alteradas
+      description: Indique as validações ou checagens incluídas
+  - type: textarea
+    id: evidencias
+    attributes:
+      label: Evidências
+      description: Print, log, link de execução bem-sucedida
