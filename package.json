@@ -1,32 +1,39 @@
 {
   "name": "playwright-automation-snsr",
   "version": "1.0.0",
-  "description": "---",
+  "description": "Automação E2E com Playwright para SNSR",
   "main": "index.js",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "pw:install-deps": "sudo npx playwright install-deps"
+    "pw:install-deps": "sudo npx playwright install-deps",
+    "pretest": "node scripts/validate-auth.js",
+    "test:e2e": "npx playwright test",
+    "test:single": "npx playwright test --project=chromium --workers=1",
+    "login:setup": "node tests/e2e/global.setup.js",
+    "codegen:auth": "npx playwright test tests/e2e/codegen.login.spec.js",
+    "codegen:record": "npx playwright codegen --load-storage=auth.json https://cs.sensrit.com.br/dash/",
+    "report": "npx playwright show-report",
+    "mock": "node mock-server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paulo-raoni/playwright-automation-snsr.git"
+    "url": "git+https://github.com/paulo-raoni/playwright-automation-sensr.git"
   },
+  "bugs": {
+    "url": "https://github.com/paulo-raoni/playwright-automation-sensr/issues"
+  },
+  "homepage": "https://github.com/paulo-raoni/playwright-automation-sensr#readme",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/paulo-raoni/playwright-automation-snsr/issues"
-  },
-  "homepage": "https://github.com/paulo-raoni/playwright-automation-snsr#readme",
   "devDependencies": {
     "@playwright/test": "^1.54.0",
-    "playwright": "^1.54.0"
+    "dotenv": "^17.2.0"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^4.18.2"
   }
 }

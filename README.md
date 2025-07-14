@@ -21,6 +21,7 @@ O objetivo é garantir rastreabilidade, velocidade, aprendizado e **zero bagunç
 * [🗺️ Estrutura do Repositório (Visual)](#estrutura-do-repositorio-visual)
 * [🟢 Guia Rápido: Primeiro Uso](#guia-rapido-primeiro-uso)
 * [🛠️ Instalação e Teste do Playwright](#instalacao-e-teste-do-playwright)
+* [📦 Scripts Disponíveis (`package.json`)](#scripts-disponiveis-packagejson)
 * [🌐 Mock Server Local para Testes](#mock-server-local-para-testes)
 * [🔗 Referências Importantes](#referencias-importantes)
 * [🎯 Próximos Passos](#proximos-passos)
@@ -160,6 +161,12 @@ O objetivo é garantir rastreabilidade, velocidade, aprendizado e **zero bagunç
 5. **Ver status dos testes/documentação:**
    [DASHBOARD.md](./dashboard/DASHBOARD.md)
 
+6. **Quer inspecionar um fluxo logado ou pegar seletores reais?**
+   Rode:
+   ```bash
+   npm run codegen:auth
+   ```
+
 -----
 
 ## 🛠️ **Instalação e Configuração do Ambiente**
@@ -242,6 +249,31 @@ Se os testes rodarem sem erros de ambiente, sua configuração está pronta.
 > Dica: sempre execute os comandos na pasta onde está o `package.json` do projeto\!
 
 -----
+
+
+## 📦 Scripts Disponíveis (`package.json`)
+
+Estes são os principais scripts disponíveis para automação, debug e manutenção do ambiente Playwright.
+
+```md
+| Comando                       | Descrição                                                                 |
+|------------------------------|---------------------------------------------------------------------------|
+| `npm run pw:install-deps`    | Instala dependências de sistema para rodar browsers no Linux             |
+| `npm run test:e2e`           | Roda toda a suíte E2E com login automático (`auth.json`)                 |
+| `npm run test:single`        | Roda apenas um teste por vez (útil para debugging)                       |
+| `npm run login:setup`        | Executa apenas o login e salva `auth.json`                               |
+| `npm run codegen:auth`       | Abre o navegador logado, pronto para inspeção/gravação de seletores      |
+| `npm run report`             | Abre o relatório gerado após uma suíte de testes                         |
+| `npm run mock`               | Inicia o servidor de mock local para testes offline                      |
+```
+> ⚠️ Os testes usam um validador automático que verifica se `auth.json` está válido.  
+> Caso contrário, o login é feito automaticamente antes da execução.
+
+> ℹ️ Veja como cada script é usado em contexto prático na seção [🟢 Guia Rápido: Primeiro Uso](#guia-rapido-primeiro-uso)
+
+
+---
+
 
 ## 🌐 Mock Server Local para Testes
 
