@@ -1,7 +1,7 @@
 
 ---
 
-# 📚 **README – Playwright Automation - BR DEV**
+# 📚 **README – playwright-automation-brdev**
 
 ---
 
@@ -14,18 +14,20 @@ O objetivo é garantir rastreabilidade, velocidade, aprendizado e **zero bagunç
 
 ## 📖 Sumário
 
-* [🗂️ Visão Macro da Estrutura](#visao-macro-da-estrutura)
-* [📦 Onde Encontrar Cada Coisa](#onde-encontrar-cada-coisa)
-* [⚡ Disclaimer e Princípios](#disclaimer-e-principios)
+* [🗂️ Visão Macro da Estrutura](#visão-macro-da-estrutura)
+* [📍 Onde Encontrar Cada Coisa](#onde-encontrar-cada-coisa)
+* [⚡ Disclaimer e Princípios](#disclaimer-e-princípios)
 * [🔎 Como Navegar por Aqui](#como-navegar-por-aqui)
-* [🗺️ Estrutura do Repositório (Visual)](#estrutura-do-repositorio-visual)
-* [🟢 Guia Rápido: Primeiro Uso](#guia-rapido-primeiro-uso)
-* [🛠️ Instalação e Teste do Playwright](#instalacao-e-teste-do-playwright)
-* [📦 Scripts Disponíveis (`package.json`)](#scripts-disponiveis-packagejson)
-* [🌐 Mock Server Local para Testes](#mock-server-local-para-testes)
-* [🔗 Referências Importantes](#referencias-importantes)
-* [🎯 Próximos Passos](#proximos-passos)
-* [👀 Diagrama Rápido — Macrofluxo do Ciclo](#diagrama-rapido--macrofluxo-do-ciclo)
+* [🗺️ Estrutura do Repositório (Visual)](#estrutura-do-repositório-visual)
+* [🟢 Guia Rápido: Primeiro Uso](#guia-rápido-primeiro-uso)
+* [🛠️ Instalação e Configuração do Ambiente](#instalação-e-configuração-do-ambiente)
+* [📦 Scripts Disponíveis (`package.json`)](#scripts-disponíveis-packagejson)
+* [🧿 Execução Visual e Debug Manual ✨](#execução-visual-e-debug-manual)
+* [🧬 Fluxo Detalhado dos Scripts E2E](#fluxo-detalhado-dos-scripts-e2e)
+* [🧱 Mock Server Local para Testes](#mock-server-local-para-testes)
+* [🔗 Referências Importantes](#referências-importantes)
+* [🎯 Próximos Passos](#próximos-passos)
+* [👀 Diagrama Rápido — Macrofluxo do Ciclo](#diagrama-rápido--macrofluxo-do-ciclo)
 
 
 
@@ -56,7 +58,7 @@ O objetivo é garantir rastreabilidade, velocidade, aprendizado e **zero bagunç
  │         │     ├─ criar-ticket.spec.ts
  │         │     └─ ...
  │         ├─ 🧩 helpers/
- │         │     └─ loginHelper.js
+ │         │     └─ loginManual.js
  │         └─ 📦 massa_dados/
  │               └─ usuarios_teste.json
  ├─ 📊 dashboard/
@@ -75,7 +77,7 @@ O objetivo é garantir rastreabilidade, velocidade, aprendizado e **zero bagunç
 
 ---
 
-### 📦 **Onde Encontrar Cada Coisa**
+### 📍 **Onde Encontrar Cada Coisa**
 
 | Caminho                                              | Descrição/Utilidade                                                | Exemplo/Link                                                |
 | ---------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------- |
@@ -83,8 +85,8 @@ O objetivo é garantir rastreabilidade, velocidade, aprendizado e **zero bagunç
 | `fluxos_de_trabalho/Fluxo_de_Desenvolvimento_E2E.md` | Guia do Dev: automação, refino, asserts, prints, dashboard         | [Ver](./fluxos_de_trabalho/Fluxo_de_Desenvolvimento_E2E.md) |
 | `fluxos_de_trabalho/Fluxos_Avancados.md`             | Casos especiais: 2FA, upload, mocks, debugging, troubleshooting    | [Ver](./fluxos_de_trabalho/Fluxos_Avancados.md)             |
 | `fluxos_de_trabalho/Exemplos.md`                     | Pastebin: exemplos reais de scripts, trechos prontos               | [Ver](./fluxos_de_trabalho/Exemplos.md)                     |
-| `tests/e2e/manual-flows/`                            | Scripts gravados e refinados via Playwright                        | Ex: `login-basico.spec.ts`                                  |
-| `tests/e2e/helpers/`                                 | Funções utilitárias: login customizado, helpers técnicos           | Ex: `loginHelper.ts`                                        |
+| `tests/e2e/manual-flows/`                            | Scripts gravados e refinados via Playwright                        | Ex: `login-basico.spec.js`                                  |
+| `tests/e2e/helpers/`                                 | Funções utilitárias: login customizado, helpers técnicos           | Ex: `loginManual.js`                                        |
 | `tests/e2e/massa_dados/`                             | Dados para teste: usuários, tickets, fixtures em JSON              | Ex: `usuarios_teste.json`                                   |
 | `dashboard/DASHBOARD.md`                             | Tabela de status dos fluxos, datas, responsáveis, rastreio         | [Ver](./dashboard/DASHBOARD.md)                             |
 | `onboarding/Onboarding_Visual.md`                    | Tutorial visual: primeiro uso, fluxo do zero, checklist onboarding | [Ver](./onboarding/Onboarding_Visual.md)                    |
@@ -275,7 +277,264 @@ Estes são os principais scripts disponíveis para automação, debug e manuten�
 ---
 
 
-## 🌐 Mock Server Local para Testes
+## 🧬 Fluxo Detalhado dos Scripts E2E
+
+Abaixo, você encontra **o que cada script realmente faz**, **quando usar**, e **quais arquivos são envolvidos**.  
+Use essa seção como referência prática para manter os testes rápidos, confiáveis e sem surpresas.
+
+> 💡 Dica: scripts com `auth.json` usam sessão armazenada.  
+> O único teste que ignora isso de propósito é `login-basico.spec.js` — veja destaque no final.
+
+---
+
+### ✅ Scripts Essenciais do Dia a Dia
+
+| Script                  | Tipo        | Quando usar                                                                                                      |
+|------------------------|--------------|------------------------------------------------------------------------------------------------------------------|
+| `test:e2e`             | ✅ Essencial | Rodar toda a suíte de testes com login automático via `auth.json`                                                |
+| `login:setup`          | ✅ Essencial | Forçar novo login e gerar novo `auth.json` via browser real                                                      |
+| `report`               | ✅ Essencial | Visualizar o relatório gerado após a execução                                                                    |
+| `test:single`          | 🟡 Útil      | Rodar um único teste de forma isolada (debug, flaky tests)                                                       |
+| `check:auth`           | ✅ Interno   | Verifica se `auth.json` ainda é válido. Se falhar, executa `global.setup.js` para gerar um novo automaticamente. |
+
+       
+
+---
+
+### 👨‍🔬 Scripts Auxiliares (dev ou debugging)
+
+| Script           | Tipo        | Finalidade                                                  |
+|------------------|-------------|-------------------------------------------------------------|
+| `codegen:auth`   | ⚠️ Dev Only | Roda um teste com `auth.json` e pausa para inspeção manual  |
+| `codegen:record` | ⚠️ Dev Only | Abre interface interativa com login já feito                |
+| `mock`           | 🧪 Auxiliar | Sobe servidor local simulado (para testes offline)          |
+
+> 🛠️ O script [`codegen.login.spec.js`](./dev-tools/codegen.login.spec.js) serve como ponto de entrada para inspeção manual com login feito via `auth.json`. Ele pausa a execução logo após o carregamento da página logada.
+
+---
+
+### 🧭 Fluxos de Execução com ASCII
+
+---
+
+#### 🟢 `npm run login:setup`
+
+```text
+╭────────────────────────────────────╮
+│         login:setup script         │
+╰────────────────────────────────────╯
+              │
+              ▼
+🧠 Carrega .env manualmente (user/pass/baseURL)
+              │
+              ▼
+🔐 Faz login via UI real (DOM + selectors)
+              │
+              ▼
+🔍 Valida presença do heading "Minha Experiência"
+              │
+              ▼
+💾 Salva storageState em:
+   → 📄 playwright/.auth/auth.json
+              │
+              ▼
+✅ Exibe logs com estado e URL confirmada
+```
+
+---
+
+#### 🔐 `npm test` (com pretest automático)
+
+```text
+╭────────────────────────────╮
+│        npm test            │
+╰────────────────────────────╯
+        │
+        ▼
+📦 Executa: scripts/check-auth-storage.js
+        │
+        ├── Se auth.json existe:
+        │     ├─ Cria contexto com storage
+        │     ├─ Acessa /dash
+        │     └─ Valida heading / URL
+        │           └── ✅ Sessão OK → segue com testes
+        │
+        └── Se auth.json não existe ou inválido:
+              └── 🔁 Executa global.setup.js (força novo login)
+                             │
+                             └── 💾 Novo auth.json salvo
+
+        ▼
+▶️ Executa testes Playwright com:
+   use.storageState = playwright/.auth/auth.json
+```
+
+---
+
+#### 🎬 `npm run codegen:auth`
+
+```text
+╭────────────────────────────────────╮
+│         codegen:auth script        │
+╰────────────────────────────────────╯
+              │
+              ▼
+▶️ Executa teste: codegen.login.spec.js
+              │
+              ├── Usa: auth.json
+              └── Pausa via page.pause()
+                        │
+                        └── 🧪 Abre devtools interativo
+```
+
+---
+
+#### 🧪 `npm run test:e2e`
+
+```text
+╭────────────────────────────────────╮
+│           test:e2e script          │
+╰────────────────────────────────────╯
+              │
+              ▼
+▶️ Executa todos os testes em:
+   tests/e2e/
+              │
+              ├── Usa: playwright/.auth/auth.json
+              ├── Executa testes com storageState
+              └── Gera logs, falhas, reports
+
+📝 Relatórios gerados em:
+  → playwright-report/
+🧾 Debugs salvos em:
+  → debug/{slug}/
+```
+
+---
+
+#### 🔁 `npm run test:single`
+
+```text
+╭────────────────────────────────────╮
+│          test:single script        │
+╰────────────────────────────────────╯
+              │
+              ▼
+▶️ Executa um único teste (modo 1 worker)
+              │
+              ├── Usa: auth.json
+              └── Ideal para testes flakey ou debug pontual
+```
+
+---
+
+#### 🧪 `npm run codegen:record`
+
+```text
+╭────────────────────────────────────╮
+│         codegen:record script      │
+╰────────────────────────────────────╯
+              │
+              ▼
+🎬 Abre Playwright Codegen UI
+              │
+              ├── Carrega auth.json como storage
+              └── Inicia no /dash
+```
+
+---
+
+#### 📊 `npm run report`
+
+```text
+╭────────────────────────────────────╮
+│           report script            │
+╰────────────────────────────────────╯
+              │
+              ▼
+📂 Abre: playwright-report/index.html
+```
+
+---
+
+### ⚠️ Observação Importante: teste que ignora `auth.json`
+
+> 🔐 **Importante para integridade dos testes**
+> O arquivo [`login-basico.spec.js`](./tests/e2e/manual-flows/login-basico.spec.js) **é o único que ignora deliberadamente o `auth.json`**.
+> Isso é necessário para validar o login manual via UI — e ele **nunca deve herdar uma sessão logada**.
+>
+> Ele inclui no topo:
+>
+> ```js
+> test.use({ storageState: undefined });
+> ```
+>
+> E **usa as credenciais diretamente do `.env`**, e não da massa `usuarios_teste.json`:
+>
+> ```js
+> const usuario = process.env.PLAYWRIGHT_USER;
+> const senha = process.env.PLAYWRIGHT_PASS;
+> ```
+
+
+---
+
+## 🧿 **Execução Visual e Debug Manual ✨**
+
+> ⚠️ **NOVO BLOCO ADICIONADO** — Use essas opções quando quiser ver o que está acontecendo — ideal para ajustes de fluxo, investigação de falhas ou seleção de elementos mais confiável.
+
+### ▶️ Rodar com navegador visível (modo headed)
+
+```bash
+npx playwright test --headed
+```
+
+🔍 Útil para ver o fluxo completo do teste em tempo real.
+
+### 🐒 Rodar devagar com `slowMo`
+
+```bash
+npx playwright test --headed --slow-mo=500
+```
+
+🛌 Adiciona delay entre ações. Ideal para inspeção visual mais lenta.
+
+### 🛠️ Debug interativo com `page.pause()`
+
+1. Adicione manualmente no seu teste ou helper:
+
+```js
+await page.pause();
+```
+
+2. Rode com:
+
+```bash
+npx playwright test --headed
+```
+
+🔪 Isso abrirá o browser no ponto de pausa e permitirá inspecionar via DevTools.
+
+### ⚠️ Teste que ignora `auth.json`
+
+> O teste [`login-basico.spec.js`](./tests/e2e/manual-flows/login-basico.spec.js) **não usa `auth.json` de propósito**. Ele simula um login real via UI.
+>
+> Ele define explicitamente:
+>
+> ```js
+> test.use({ storageState: undefined });
+> ```
+>
+> Para rodá-lo com visualização e delay:
+>
+> ```bash
+> npx playwright test tests/e2e/manual-flows/login-basico.spec.js --headed --slow-mo=300
+> ```
+
+---
+
+
+## 🧱 Mock Server Local para Testes
 
 
 ╭─────────────╮         ╭───────────────╮        ╭─────────────╮
@@ -354,12 +613,14 @@ Use o **Mock Server Local** (Node.js/Express) incluído no repo para simular log
 ## 👀 **Diagrama Rápido — Macrofluxo do Ciclo**
 
 ```ascii
-╔══════════════════════════════════════════╗
-║    QA grava -> Dev adapta -> Fluxo      ║
-║    documentado -> Dashboard atualizado  ║
-║         ↓                ↓              ║
-║    Exemplos reais     Docs avançados    ║
-╚══════════════════════════════════════════╝
+╭────────────╮        ╭─────────────────╮       ╭──────────────╮
+│   QA grava ├──▶     |Dev adapta script├──▶    |Teste validado├─┐
+╰────────────╯        ╰─────────────────╯       ╰──────────────╯ │
+          │                        │                             │
+          ▼                        ▼                             ▼
+    Pastebin de exemplos     Fluxo de Dev & QA          Dashboard atualizado
+    (Exemplos.md)           (documentação técnica)       (status, responsáveis)
+
 ```
 
 ---

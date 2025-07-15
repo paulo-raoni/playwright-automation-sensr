@@ -9,14 +9,15 @@
   },
   "scripts": {
     "pw:install-deps": "sudo npx playwright install-deps",
-    "pretest": "node scripts/validate-auth.js",
-    "test:e2e": "npx playwright test",
-    "test:single": "npx playwright test --project=chromium --workers=1",
-    "login:setup": "node tests/e2e/global.setup.js",
-    "codegen:auth": "npx playwright test tests/e2e/codegen.login.spec.js",
-    "codegen:record": "npx playwright codegen --load-storage=auth.json https://cs.sensrit.com.br/dash/",
+    "check:auth": "node scripts/check-auth-storage.js",
+    "test:e2e": "DOTENV_CONFIG_QUIET=true npx playwright test",
+    "test:single": "DOTENV_CONFIG_QUIET=true npx playwright test --project=chromium --workers=1",
+    "login:setup": "DOTENV_CONFIG_QUIET=true node tests/e2e/global.setup.js",
+    "codegen:auth": "DOTENV_CONFIG_QUIET=true npx playwright test tools/playwright.codegen.auth.spec.js",
+    "codegen:record": "DOTENV_CONFIG_QUIET=true npx playwright codegen --load-storage=playwright/.auth/auth.json https://cs.sensrit.com.br/dash/",
     "report": "npx playwright show-report",
-    "mock": "node mock-server.js"
+    "mock": "node mock-server.js",
+    "debug:test": "npx playwright test --debug --project=chromium"
   },
   "repository": {
     "type": "git",

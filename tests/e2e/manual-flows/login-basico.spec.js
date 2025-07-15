@@ -1,12 +1,24 @@
-// tests/e2e/manual-flows/login-basico.spec.js
 const { test, expect } = require('@playwright/test');
-const { login } = require('../helpers/loginHelper');
-const usuarios = require('../massa_dados/usuarios_teste.json');
+const { loginManual } = require('../helpers/loginManual');
+const { captureDebugInfo } = require('../helpers/captureDebug');
+const dotenv = require('dotenv');
+dotenv.config();
+
+test.use({ storageState: undefined }); // Garante ambiente limpo
 
 test('Login Básico', async ({ page }) => {
-  const user = usuarios.find(u => u.usuario === 'admin');
-  await login(page, user.usuario, user.senha);
+  const usuario = process.env.PLAYWRIGHT_USER;
+  const senha = process.env.PLAYWRIGHT_PASS;
 
-  // Valida que caiu exatamente na rota correta
-  await expect(page).toHaveURL(/\/dash\/$/, { timeout: 10000 });
+  // 🧪 Login manual ativado (sem reaproveitar storageState)
+  await loginManual(page, usuario, senha);
+
+  try {
+    await expect(page).toHaveURL(/\/dash\/$/, { timeout: 10000 });
+    console.log("✅ Redirecionamento após login confirmado.");
+  } catch (err) {
+    console.warn("⚠️ Redirecionamento não ocorreu como esperado. Capturando evidências...");
+    await captureDebugInfo(page, 'login-basico', 'erro-redirect');
+    throw err;
+  }
 });

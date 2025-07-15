@@ -5,12 +5,22 @@ yarn-error.log*
 dist/
 build/
 .env
-.env.*
+yarn.lock
+pnpm-lock.yaml
+
 
 # Playwright/test output
 test-results/
 playwright-report/
 *.log
+*.html
+!docs/**/*.html
+!tests/**/*.html
+/playwright/.auth/
+debug/
+*.spec.codegen.ts
+*.spec.codegen.js
+
 
 # Relatórios e logs gerados
 logs/
